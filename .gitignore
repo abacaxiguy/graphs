@@ -30,6 +30,10 @@
 *.out
 *.app
 
+# VSCode
+
+.vscode
+
 # Binaries
 *
 !/**/
