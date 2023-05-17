@@ -1,5 +1,9 @@
 #include <iostream>
 #include <string.h>
+#include <string>
+#include <fstream>
+#include <ostream>
+#include <sstream>
 #include <list>
 #include <queue>
 #define inf 9999999
@@ -100,47 +104,108 @@ void help()
             "Para salvar a distância mínima em um arquivo, use: \n./dijkstra -f <arquivo> -o <arquivo> -i v0\n";
 }
 
-int main(int argc, char *argv[])
+int read(string fileName, int modoDeOutput, string outputFileName)
 {
-    int tamanho = 6;
-    Grafo g(tamanho);
-    g.adicionar(1, 2, 5);
-    g.adicionar(1, 3, 4);
-    g.adicionar(1, 4, 2);
-    g.adicionar(1, 6, 6);
-    g.adicionar(2, 4, 1);
-    g.adicionar(2, 5, 7);
-    g.adicionar(3, 5, 6);
-    g.adicionar(4, 6, 1);
-
-    for (int i = 1; i < tamanho + 1; i++)
-    {
-        cout << i << ":";
-        cout << g.dijkstra(1, i) << " ";
-    }
-
+    ifstream file;
     try
     {
+        file.open(fileName);
+        if (!file.good())
+            throw "Arquivo não encontrado!";
+    }
+    catch (const char *msg)
+    {
+        cerr << "Erro: " << msg << endl;
+        return -1;
+    }
+
+    int vertices, arestas;
+    string linha;
+    getline(file, linha);
+
+    istringstream iss(linha);
+
+    iss >> vertices >> arestas;
+
+    // cout << "Vértices: " << vertices << endl;
+    // cout << "Arestas: " << arestas << endl;
+
+    Grafo g(vertices);
+
+    for (int i = 0; i < arestas; i++)
+    {
+        getline(file, linha);
+        int v1, v2, peso;
+        istringstream iss(linha);
+        iss >> v1 >> v2 >> peso;
+        // cout << v1 << " " << v2 << " " << peso << endl;
+        g.adicionar(v1, v2, peso);
+    }
+
+    file.close();
+    // cout << "Fechou o arquivo" << endl;
+    if (modoDeOutput == 1)
+    {
+        ofstream outFile;
+        outFile.open(outputFileName);
+
+        for (int i = 1; i <= vertices; i++)
+        {
+            outFile << i << ":";
+            outFile << g.dijkstra(1, i) << " ";
+        }
+
+        outFile.close();
+    }
+    else
+    {
+        for (int i = 1; i <= vertices; i++)
+        {
+            {
+                cout << i << ":";
+                cout << g.dijkstra(1, i);
+            }
+        }
+
+        cout << endl;
+    }
+
+    return 0;
+}
+
+int main(int argc, char *argv[])
+{
+    try
+    {
+        int modoDeOutput = 0; // 0: terminal, 1: arquivo
+        int fRun = 0;
+        string outputFileName = "", inputFileName = "";
+
         if (argc - 1 == 0)
             throw "Nenhum argumento foi mandado!";
 
         for (int i = 1; i < argc; i++)
         {
             if (!strcmp(argv[i], "-h"))
+            {
                 help();
+                break;
+            }
             else if ((!strcmp(argv[i], "-o") || !strcmp(argv[i], "-f") || !strcmp(argv[i], "-i")) && argv[i + 1] == NULL)
             {
-                throw "Especifique o caminho do arquivo como mostrado no help (./prim -h)";
+                throw "Especifique o caminho do arquivo como mostrado no help (./dijkstra -h)";
                 break;
             }
             else if (!strcmp(argv[i], "-o"))
             {
-                printf("OUTPUT, SEU ARQUIVO É: %s\n", argv[i + 1]);
+                modoDeOutput = 1;
+                outputFileName = argv[i + 1];
                 i++;
             }
             else if (!strcmp(argv[i], "-f"))
             {
-                printf("FILE, SEU ARQUIVO É: %s\n", argv[i + 1]);
+                fRun = 1;
+                inputFileName = argv[i + 1];
                 i++;
             }
             else if (!strcmp(argv[i], "-i"))
@@ -154,6 +219,8 @@ int main(int argc, char *argv[])
                 break;
             }
         }
+        if (fRun)
+            read(inputFileName, modoDeOutput, outputFileName);
     }
     catch (const char *msg)
     {
