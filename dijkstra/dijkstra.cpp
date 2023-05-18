@@ -36,10 +36,10 @@ public:
     int dijkstra(int orig, int dest)
     {
         // vetor de distancia
-        int dist[v];
+        vector<int> dist;
 
         // vetor de visistados para n repetir vertecie
-        int visitados[v];
+        vector<int> visitados;
 
         // heap minima c++
         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> heap_min; // aparti de vector é alteração que precisa ser feita para torna a heap minima
@@ -47,8 +47,8 @@ public:
         // inicia o vetor de distancia e visitados
         for (int i = 0; i < v; i++)
         {
-            dist[i] = inf;
-            visitados[i] = false;
+            dist.push_back(inf);
+            visitados.push_back(false);
         }
         // distancia de origem para origem é 0
         dist[orig] = 0;
@@ -104,7 +104,7 @@ void help()
             "Para salvar a distância mínima em um arquivo, use: \n./dijkstra -f <arquivo> -o <arquivo> -i v0\n";
 }
 
-int read(string fileName, int modoDeOutput, string outputFileName)
+int read(string fileName, string modoDeOutput, string outputFileName)
 {
     ifstream file;
     try
@@ -123,12 +123,18 @@ int read(string fileName, int modoDeOutput, string outputFileName)
     string linha;
     getline(file, linha);
 
+    if (linha == "")
+    {
+        cout << "Erro: Arquivo vazio!" << endl;
+        return -1;
+    }
+
     istringstream iss(linha);
 
     iss >> vertices >> arestas;
 
-    // cout << "Vértices: " << vertices << endl;
-    // cout << "Arestas: " << arestas << endl;
+    cout << "Vértices: " << vertices << endl;
+    cout << "Arestas: " << arestas << endl;
 
     Grafo g(vertices);
 
@@ -138,13 +144,15 @@ int read(string fileName, int modoDeOutput, string outputFileName)
         int v1, v2, peso;
         istringstream iss(linha);
         iss >> v1 >> v2 >> peso;
-        // cout << v1 << " " << v2 << " " << peso << endl;
         g.adicionar(v1, v2, peso);
+        cout << v1 << " " << v2 << " " << peso << endl;
+        g.adicionar(v2, v1, peso);
+        cout << v2 << " " << v1 << " " << peso << endl;
     }
 
     file.close();
     // cout << "Fechou o arquivo" << endl;
-    if (modoDeOutput == 1)
+    if (modoDeOutput == "file")
     {
         ofstream outFile;
         outFile.open(outputFileName);
@@ -152,7 +160,7 @@ int read(string fileName, int modoDeOutput, string outputFileName)
         for (int i = 1; i <= vertices; i++)
         {
             outFile << i << ":";
-            outFile << g.dijkstra(1, i) << " ";
+            i == vertices ? outFile << g.dijkstra(1, i) : outFile << g.dijkstra(1, i) << " ";
         }
 
         outFile.close();
@@ -163,7 +171,7 @@ int read(string fileName, int modoDeOutput, string outputFileName)
         {
             {
                 cout << i << ":";
-                cout << g.dijkstra(1, i);
+                cout << g.dijkstra(1, i) << " ";
             }
         }
 
@@ -177,9 +185,8 @@ int main(int argc, char *argv[])
 {
     try
     {
-        int modoDeOutput = 0; // 0: terminal, 1: arquivo
-        int fRun = 0;
-        string outputFileName = "", inputFileName = "";
+        bool fileRun = false;
+        string outputFileName = "", inputFileName = "", modoDeOutput = "terminal";
 
         if (argc - 1 == 0)
             throw "Nenhum argumento foi mandado!";
@@ -198,13 +205,13 @@ int main(int argc, char *argv[])
             }
             else if (!strcmp(argv[i], "-o"))
             {
-                modoDeOutput = 1;
+                modoDeOutput = "file";
                 outputFileName = argv[i + 1];
                 i++;
             }
             else if (!strcmp(argv[i], "-f"))
             {
-                fRun = 1;
+                fileRun = true;
                 inputFileName = argv[i + 1];
                 i++;
             }
@@ -219,7 +226,7 @@ int main(int argc, char *argv[])
                 break;
             }
         }
-        if (fRun)
+        if (fileRun)
             read(inputFileName, modoDeOutput, outputFileName);
     }
     catch (const char *msg)
