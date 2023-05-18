@@ -18,12 +18,12 @@ private:   // os menbro de uma classe são privados
     list<pair<int, int>> *adj; // pair para indicar qual vertice liga a qual vertice com custo x
 
 public:
-    // contrutor
+    // construtor
     Grafo(int v)
     {
-        this->v = v; // atribuindo o numero de vertices
+        this->v = v + 1; // atribuindo o numero de vertices
         /* cria as lista on de cada lista é uma lista de pairs onde cada pair é formado pelo vertice de destino e o custo*/
-        adj = new list<pair<int, int>>[v]; // eu tenho v listas de adjacencias
+        adj = new list<pair<int, int>>[v + 1]; // eu tenho v listas de adjacencias
     }
 
     // adiciona uma aresta ao grafo de v1 a v2
@@ -99,12 +99,12 @@ void help()
             "-h           : mostra o help\n"
             "-o <arquivo> : redireciona a saida para o \"arquivo\"\n"
             "-f <arquivo> : indica o \"arquivo\" que contém o grafo de entrada\n"
-            "-i v0        : vértice inicial \"v0\" \n\n"
+            "-i v0        : vértice inicial \"v0\" (se não for enviado, v0 será 1)\n\n"
             "Para saber a distância mínima do vértice v0 para todos os demais, use: \n./dijkstra -f <arquivo> -i v0\n"
             "Para salvar a distância mínima em um arquivo, use: \n./dijkstra -f <arquivo> -o <arquivo> -i v0\n";
 }
 
-int read(string fileName, string modoDeOutput, string outputFileName)
+int read(string fileName, string modoDeOutput, string outputFileName, int v0)
 {
     ifstream file;
     try
@@ -133,9 +133,6 @@ int read(string fileName, string modoDeOutput, string outputFileName)
 
     iss >> vertices >> arestas;
 
-    cout << "Vértices: " << vertices << endl;
-    cout << "Arestas: " << arestas << endl;
-
     Grafo g(vertices);
 
     for (int i = 0; i < arestas; i++)
@@ -145,13 +142,10 @@ int read(string fileName, string modoDeOutput, string outputFileName)
         istringstream iss(linha);
         iss >> v1 >> v2 >> peso;
         g.adicionar(v1, v2, peso);
-        cout << v1 << " " << v2 << " " << peso << endl;
-        g.adicionar(v2, v1, peso);
-        cout << v2 << " " << v1 << " " << peso << endl;
+        g.adicionar(v2, v1, peso); // para grafos não direcionados
     }
 
     file.close();
-    // cout << "Fechou o arquivo" << endl;
     if (modoDeOutput == "file")
     {
         ofstream outFile;
@@ -160,7 +154,10 @@ int read(string fileName, string modoDeOutput, string outputFileName)
         for (int i = 1; i <= vertices; i++)
         {
             outFile << i << ":";
-            i == vertices ? outFile << g.dijkstra(1, i) : outFile << g.dijkstra(1, i) << " ";
+            int resultado = g.dijkstra(v0, i);
+            if (resultado == inf)
+                resultado = -1;
+            outFile << resultado << " ";
         }
 
         outFile.close();
@@ -171,7 +168,10 @@ int read(string fileName, string modoDeOutput, string outputFileName)
         {
             {
                 cout << i << ":";
-                cout << g.dijkstra(1, i) << " ";
+                int resultado = g.dijkstra(v0, i);
+                if (resultado == inf)
+                    resultado = -1;
+                cout << resultado << " ";
             }
         }
 
@@ -187,6 +187,7 @@ int main(int argc, char *argv[])
     {
         bool fileRun = false;
         string outputFileName = "", inputFileName = "", modoDeOutput = "terminal";
+        int v0 = 1;
 
         if (argc - 1 == 0)
             throw "Nenhum argumento foi mandado!";
@@ -217,7 +218,7 @@ int main(int argc, char *argv[])
             }
             else if (!strcmp(argv[i], "-i"))
             {
-                printf("VERTICE INICIAL: %d\n", atoi(argv[i + 1]));
+                v0 = atoi(argv[i + 1]);
                 i++;
             }
             else
@@ -227,7 +228,7 @@ int main(int argc, char *argv[])
             }
         }
         if (fileRun)
-            read(inputFileName, modoDeOutput, outputFileName);
+            read(inputFileName, modoDeOutput, outputFileName, v0);
     }
     catch (const char *msg)
     {
