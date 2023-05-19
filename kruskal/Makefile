@@ -1,5 +1,5 @@
 TARGET = kruskal
-OBJS = {TARGET}.o
+OBJS = $(TARGET).o
 BINARY = $(TARGET).bin
 CC = g++
 CFLAGS = -Wall -g -std=c++11
