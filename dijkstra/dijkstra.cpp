@@ -35,18 +35,11 @@ public:
     // Dijkstra retornando as distancias minimas de um vertice origem a todos os outros
     vector<int> dijkstra(int orig)
     {
-        vector<int> dist;
-        vector<int> visitados;
+        vector<int> dist(v, inf);        // vetor de distancias iniciado com infinito
+        vector<int> visitados(v, false); // vetor de visitados iniciado com false
 
         // heap minima c++
         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> heap_min;
-
-        // inicia o vetor de distancia e visitados
-        for (int i = 1; i <= v; i++) // uma vez que o grafo começa do vertice 1
-        {
-            dist.push_back(inf);
-            visitados.push_back(false);
-        }
 
         // distancia de origem para origem é 0
         dist[orig] = 0;
