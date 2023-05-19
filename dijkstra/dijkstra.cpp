@@ -90,11 +90,11 @@ void help()
             "-o <arquivo> : redireciona a saida para o \"arquivo\"\n"
             "-f <arquivo> : indica o \"arquivo\" que contém o grafo de entrada\n"
             "-i v0        : vértice inicial \"v0\" (se não for enviado, v0 será 1)\n\n"
-            "Para saber a distância mínima do vértice v0 para todos os demais, use: \n./dijkstra -f <arquivo> -i v0\n"
-            "Para salvar a distância mínima em um arquivo, use: \n./dijkstra -f <arquivo> -o <arquivo> -i v0\n";
+            "Para saber a distância mínima do vértice v0 para todos os demais, use: \n./dijkstra -f <arquivo> -i v0\n\n"
+            "Para salvar a distância mínima em um arquivo, use: \n./dijkstra -f <arquivo> -o <arquivo> -i v0\n\n";
 }
 
-int read(string fileName, string modoDeOutput, string outputFileName, int v0)
+int read(string fileName, string outputFileName, int v0)
 {
     ifstream file;
     try
@@ -138,7 +138,7 @@ int read(string fileName, string modoDeOutput, string outputFileName, int v0)
 
     file.close();
 
-    if (modoDeOutput == "file")
+    if (outputFileName != "")
     {
         ofstream outFile;
         outFile.open(outputFileName);
@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
     try
     {
         bool fFlag = false, hFlag = false;
-        string outputFileName = "", inputFileName = "", modoDeOutput = "terminal";
+        string outputFileName = "", inputFileName = "";
         int v0 = 1;
 
         if (argc - 1 == 0)
@@ -197,7 +197,6 @@ int main(int argc, char *argv[])
             }
             else if (!strcmp(argv[i], "-o"))
             {
-                modoDeOutput = "file";
                 outputFileName = argv[i + 1];
                 i++;
             }
@@ -219,7 +218,7 @@ int main(int argc, char *argv[])
             }
         }
         if (fFlag)
-            read(inputFileName, modoDeOutput, outputFileName, v0);
+            read(inputFileName, outputFileName, v0);
         else if (!hFlag)
             throw "Nenhum arquivo de entrada foi especificado! (Veja o help: ./dijkstra -h)";
     }
