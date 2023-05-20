@@ -7,14 +7,14 @@
 #include <list>
 #include <queue>
 #include <algorithm> // sort
-#include <string.h> // memset
+#include <string.h>  // memset
+
 using namespace std;
 
 struct Aresta
 {
     int v1, v2, peso;
 };
-
 
 class Grafo
 {
@@ -37,18 +37,15 @@ public:
     {
         adj[v1].push_back(make_pair(v2, custo)); // tem um vertice saindo de v1 ate v2 com um custo x
     }
-    //compara o peso da aresta para ordenar depois
-    static bool comparacaoAresta (const Aresta& v1, const Aresta& v2) 
+    // compara o peso da aresta para ordenar depois
+    static bool comparacaoAresta(const Aresta &v1, const Aresta &v2)
     {
         return v1.peso < v2.peso;
     }
 
-
-
-    
     int Find(vector<int> pai, int i)
     {
-        if(pai[i] != i)
+        if (pai[i] != i)
         {
             return Find(pai, pai[i]);
         }
@@ -58,8 +55,7 @@ public:
         }
     }
 
-    
-    void Union(vector<int>& pai, vector<int>& rank, int v1, int v2)
+    void Union(vector<int> &pai, vector<int> &rank, int v1, int v2)
     {
         if (rank[v1] >= rank[v2])
         {
@@ -75,18 +71,20 @@ public:
 
     vector<Aresta> kruskal()
     {
-        vector<Aresta> agm;// para guarda todos os vetores que fazem parte da arvore geradora minima
-        vector<int> pai(v); // Vetor para armazenar os pais dos subconjuntos
+        vector<Aresta> agm;     // para guarda todos os vetores que fazem parte da arvore geradora minima
+        vector<int> pai(v);     // Vetor para armazenar os pais dos subconjuntos
         vector<int> rank(v, 0); // inicializando rank com v pos e 0 em todas
-        
+
         // Criando array com arestas ordenadas
         vector<Aresta> arestas_ord;
-        for (int i = 0; i < v; i++) {
-            for (auto it = adj[i].begin(); it != adj[i].end(); it++) 
+        for (int i = 0; i < v; i++)
+        {
+            for (auto it = adj[i].begin(); it != adj[i].end(); it++)
             {
                 int dest = it->first;
                 int peso = it->second;
-                if (i < dest) { // Adicionar apenas uma cópia da aresta para evitar duplicações
+                if (i < dest)
+                { // Adicionar apenas uma cópia da aresta para evitar duplicações
                     Aresta arestas;
                     arestas.v1 = i;
                     arestas.v2 = dest;
@@ -95,15 +93,15 @@ public:
                 }
             }
         }
-        //ordenar as arestas pelo menor peso
+        // ordenar as arestas pelo menor peso
         sort(arestas_ord.begin(), arestas_ord.end(), comparacaoAresta);
 
-        //make set so para o pai pois ja to fazendo na declarção o do rank
-        for (int i = 0; i < v; i++) 
+        // make set so para o pai pois ja to fazendo na declarção o do rank
+        for (int i = 0; i < v; i++)
         {
-            pai[i]= i;
+            pai[i] = i;
         }
-        
+
         // Iterar por todas as arestas
         for (int i = 0; i < arestas_ord.size(); i++)
         {
@@ -112,18 +110,16 @@ public:
             int inicio_pai = Find(pai, inicio);
             int destino_pai = Find(pai, destino);
 
-            if(inicio_pai != destino_pai)
+            if (inicio_pai != destino_pai)
             {
                 agm.push_back(arestas_ord[i]);
                 Union(pai, rank, inicio_pai, destino_pai);
             }
         }
 
-        return agm;   
+        return agm;
     }
 };
-
-
 
 void help()
 {
@@ -132,12 +128,12 @@ void help()
             "-o <arquivo> : redireciona a saida para o \"arquivo\"\n"
             "-f <arquivo> : indica o \"arquivo\" que contém o grafo de entrada\n"
             "-s           : mostra a solução (em ordem crescente)\n\n"
-            "Para calcular o custo da AGM, use:\n./kruskal -f <arquivo> -i v0\n\n"
-            "Para imprimir a árvore geradora mínima, use: \n./kruskal -f <arquivo> -i v0 -s\n\n"
-            "Para salvar o resultado em um arquivo, use: \n./kruskal -f <arquivo> -o <arquivo> -i v0\n\n";
+            "Para calcular o custo da AGM, use:\n./kruskal -f <arquivo>\n\n"
+            "Para imprimir a árvore geradora mínima, use: \n./kruskal -f <arquivo> -s\n\n"
+            "Para salvar o resultado em um arquivo, use: \n./kruskal -f <arquivo> -o <arquivo>\n\n";
 }
 
-int read(string fileName, string outputFileName, int v0, bool agm)
+int read(string fileName, string outputFileName, bool agm)
 {
     ifstream file;
     try
@@ -181,54 +177,61 @@ int read(string fileName, string outputFileName, int v0, bool agm)
 
     file.close();
 
+    vector<Aresta> resultado = g.kruskal();
+    int custo = 0;
+
     if (outputFileName != "")
     {
         ofstream outFile;
         outFile.open(outputFileName);
 
-        vector<Aresta> resultado = g.kruskal();
-        if(agm == true)
+        if (agm)
         {
-            outFile << "Árvore geradora mínima:"<< endl;
+            sort(resultado.begin(), resultado.end(), [](Aresta a, Aresta b)
+                 { return a.v1 < b.v1 || (a.v1 == b.v1 && a.v2 < b.v2); });
+
             for (int i = 0; i < resultado.size(); i++)
             {
-                outFile << "(" << resultado[i].v1 << "," << resultado[i].v2 << ")  ";
+                if (resultado[i].v1 < resultado[i].v2)
+                    outFile << "(" << resultado[i].v1 << "," << resultado[i].v2 << ") ";
+                else
+                    outFile << "(" << resultado[i].v2 << "," << resultado[i].v1 << ") ";
             }
-
-            outFile.close();
         }
         else
         {
-            int custo = 0;
             for (int i = 0; i < resultado.size(); i++)
-            {
                 custo += resultado[i].peso;
-            }
-            outFile << custo << endl;
+
+            outFile << custo;
         }
+
+        outFile.close();
     }
     else
     {
-        vector<Aresta> resultado = g.kruskal();
-
-        if(agm == true)
+        if (agm)
         {
-            cout << "Árvore geradora mínima:"<< endl;
+            sort(resultado.begin(), resultado.end(), [](Aresta a, Aresta b)
+                 { return a.v1 < b.v1 || (a.v1 == b.v1 && a.v2 < b.v2); });
+
             for (int i = 0; i < resultado.size(); i++)
             {
-                cout << "(" << resultado[i].v1 << "," << resultado[i].v2 << ")  ";
+                if (resultado[i].v1 < resultado[i].v2)
+                    cout << "(" << resultado[i].v1 << "," << resultado[i].v2 << ") ";
+                else
+                    cout << "(" << resultado[i].v2 << "," << resultado[i].v1 << ") ";
             }
-            cout << endl;
         }
         else
         {
-            int custo = 0;
             for (int i = 0; i < resultado.size(); i++)
-            {
                 custo += resultado[i].peso;
-            }
-            cout << custo << endl;
+
+            cout << custo;
         }
+
+        cout << endl;
     }
 
     return 0;
@@ -240,7 +243,6 @@ int main(int argc, char *argv[])
     {
         bool fFlag = false, hFlag = false, ordemCrescente = false;
         string outputFileName = "", inputFileName = "";
-        int v0 = 1;
 
         if (argc - 1 == 0)
             throw "Nenhum argumento foi mandado!";
@@ -255,7 +257,7 @@ int main(int argc, char *argv[])
             }
             else if (!strcmp(argv[i], "-s"))
                 ordemCrescente = true;
-            else if ((!strcmp(argv[i], "-o") || !strcmp(argv[i], "-f") || !strcmp(argv[i], "-i")) && argv[i + 1] == NULL)
+            else if ((!strcmp(argv[i], "-o") || !strcmp(argv[i], "-f")) && argv[i + 1] == NULL)
             {
                 throw "Especifique o caminho do arquivo (ou o vértice inicial)! (Veja o help: ./kruskal -h)";
                 break;
@@ -271,11 +273,6 @@ int main(int argc, char *argv[])
                 inputFileName = argv[i + 1];
                 i++;
             }
-            else if (!strcmp(argv[i], "-i"))
-            {
-                v0 = atoi(argv[i + 1]);
-                i++;
-            }
             else
             {
                 throw "Argumento inválido!";
@@ -283,9 +280,9 @@ int main(int argc, char *argv[])
             }
         }
         if (fFlag)
-            read(inputFileName, outputFileName, v0, ordemCrescente);
+            read(inputFileName, outputFileName, ordemCrescente);
         else if (!hFlag)
-            throw "Nenhum arquivo de entrada foi especificado! (Veja o help: ./prim -h)";
+            throw "Nenhum arquivo de entrada foi especificado! (Veja o help: ./kruskal -h)";
     }
     catch (const char *msg)
     {

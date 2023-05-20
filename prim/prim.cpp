@@ -6,6 +6,7 @@
 #include <sstream>
 #include <list>
 #include <queue>
+#include <algorithm> // sort
 
 #define inf 9999999
 
@@ -65,6 +66,30 @@ public:
             }
         }
 
+        vector<pair<int, int>> sorted_result;
+        int total = 0;
+
+        if (agm)
+        {
+            for (int i = 1; i < prev.size(); i++)
+            {
+                if (i == orig)
+                    continue;
+                if (prev[i] < i)
+                    sorted_result.push_back(make_pair(prev[i], i));
+                else
+                    sorted_result.push_back(make_pair(i, prev[i]));
+            }
+
+            sort(sorted_result.begin(), sorted_result.end(), [](pair<int, int> a, pair<int, int> b)
+                 { return a.first < b.first || (a.first == b.first && a.second < b.second); });
+        }
+        else
+        {
+            for (int i = 1; i < v; i++)
+                total += custo[i];
+        }
+
         if (outputFileName != "")
         {
             ofstream outFile;
@@ -72,20 +97,11 @@ public:
 
             if (agm)
             {
-                for (int i = 1; i < prev.size(); i++)
-                {
-                    if (prev[i] == -1)
-                        continue;
-                    outFile << "(" << prev[i] << "," << i << ") ";
-                }
+                for (int i = 0; i < sorted_result.size(); i++)
+                    outFile << "(" << sorted_result[i].first << "," << sorted_result[i].second << ") ";
             }
             else
-            {
-                int total = 0;
-                for (int i = 1; i < v; i++)
-                    total += custo[i];
                 outFile << total;
-            }
 
             outFile.close();
         }
@@ -93,20 +109,12 @@ public:
         {
             if (agm)
             {
-                for (int i = 1; i < prev.size(); i++)
-                {
-                    if (prev[i] == -1)
-                        continue;
-                    cout << "(" << prev[i] << "," << i << ") ";
-                }
+
+                for (int i = 0; i < sorted_result.size(); i++)
+                    cout << "(" << sorted_result[i].first << "," << sorted_result[i].second << ") ";
             }
             else
-            {
-                int total = 0;
-                for (int i = 1; i < v; i++)
-                    total += custo[i];
                 cout << total;
-            }
 
             cout << endl;
         }
