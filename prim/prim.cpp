@@ -178,9 +178,9 @@ void help()
             "-f <arquivo> : indica o \"arquivo\" que contém o grafo de entrada\n"
             "-s           : mostra a solução (em ordem crescente)\n"
             "-i v0        : vértice inicial \"v0\" (se não for enviado, v0 será 1)\n\n"
-            "Para calcular o custo da AGM, use:\n./prim -f <arquivo> -i v0\n\n"
-            "Para imprimir a árvore geradora mínima, use: \n./prim -f <arquivo> -i v0 -s\n\n"
-            "Para salvar o resultado em um arquivo, use: \n./prim -f <arquivo> -o <arquivo> -i v0\n\n";
+            "Para calcular o custo da AGM, use:\n./prim.bin -f <arquivo> -i v0\n\n"
+            "Para imprimir a árvore geradora mínima, use: \n./prim.bin -f <arquivo> -i v0 -s\n\n"
+            "Para salvar o resultado em um arquivo, use: \n./prim.bin -f <arquivo> -o <arquivo> -i v0\n\n";
 }
 
 int main(int argc, char *argv[])
@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
                 ordemCrescente = true;
             else if ((!strcmp(argv[i], "-o") || !strcmp(argv[i], "-f") || !strcmp(argv[i], "-i")) && argv[i + 1] == NULL)
             {
-                throw "Especifique o caminho do arquivo (ou o vértice inicial)! (Veja o help: ./prim -h)";
+                throw "Especifique o caminho do arquivo (ou o vértice inicial)! (Veja o help: ./prim.bin -h)";
                 break;
             }
             else if (!strcmp(argv[i], "-o"))
@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
         if (fFlag)
             read(inputFileName, outputFileName, v0, ordemCrescente);
         else if (!hFlag)
-            throw "Nenhum arquivo de entrada foi especificado! (Veja o help: ./prim -h)";
+            throw "Nenhum arquivo de entrada foi especificado! (Veja o help: ./prim.bin -h)";
     }
     catch (const char *msg)
     {

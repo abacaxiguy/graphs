@@ -128,9 +128,9 @@ void help()
             "-o <arquivo> : redireciona a saida para o \"arquivo\"\n"
             "-f <arquivo> : indica o \"arquivo\" que contém o grafo de entrada\n"
             "-s           : mostra a solução (em ordem crescente)\n\n"
-            "Para calcular o custo da AGM, use:\n./kruskal -f <arquivo>\n\n"
-            "Para imprimir a árvore geradora mínima, use: \n./kruskal -f <arquivo> -s\n\n"
-            "Para salvar o resultado em um arquivo, use: \n./kruskal -f <arquivo> -o <arquivo>\n\n";
+            "Para calcular o custo da AGM, use:\n./kruskal.bin -f <arquivo>\n\n"
+            "Para imprimir a árvore geradora mínima, use: \n./kruskal.bin -f <arquivo> -s\n\n"
+            "Para salvar o resultado em um arquivo, use: \n./kruskal.bin -f <arquivo> -o <arquivo>\n\n";
 }
 
 int read(string fileName, string outputFileName, bool agm)
@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
                 ordemCrescente = true;
             else if ((!strcmp(argv[i], "-o") || !strcmp(argv[i], "-f")) && argv[i + 1] == NULL)
             {
-                throw "Especifique o caminho do arquivo (ou o vértice inicial)! (Veja o help: ./kruskal -h)";
+                throw "Especifique o caminho do arquivo (ou o vértice inicial)! (Veja o help: ./kruskal.bin -h)";
                 break;
             }
             else if (!strcmp(argv[i], "-o"))
@@ -282,7 +282,7 @@ int main(int argc, char *argv[])
         if (fFlag)
             read(inputFileName, outputFileName, ordemCrescente);
         else if (!hFlag)
-            throw "Nenhum arquivo de entrada foi especificado! (Veja o help: ./kruskal -h)";
+            throw "Nenhum arquivo de entrada foi especificado! (Veja o help: ./kruskal.bin -h)";
     }
     catch (const char *msg)
     {

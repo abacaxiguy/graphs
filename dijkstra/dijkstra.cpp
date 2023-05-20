@@ -88,8 +88,8 @@ void help()
             "-o <arquivo> : redireciona a saida para o \"arquivo\"\n"
             "-f <arquivo> : indica o \"arquivo\" que contém o grafo de entrada\n"
             "-i v0        : vértice inicial \"v0\" (se não for enviado, v0 será 1)\n\n"
-            "Para saber a distância mínima do vértice v0 para todos os demais, use: \n./dijkstra -f <arquivo> -i v0\n\n"
-            "Para salvar a distância mínima em um arquivo, use: \n./dijkstra -f <arquivo> -o <arquivo> -i v0\n\n";
+            "Para saber a distância mínima do vértice v0 para todos os demais, use: \n./dijkstra.bin -f <arquivo> -i v0\n\n"
+            "Para salvar a distância mínima em um arquivo, use: \n./dijkstra.bin -f <arquivo> -o <arquivo> -i v0\n\n";
 }
 
 int read(string fileName, string outputFileName, int v0)
@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
             }
             else if ((!strcmp(argv[i], "-o") || !strcmp(argv[i], "-f") || !strcmp(argv[i], "-i")) && argv[i + 1] == NULL)
             {
-                throw "Especifique o caminho do arquivo (ou o vértice inicial)! (Veja o help: ./dijkstra -h)";
+                throw "Especifique o caminho do arquivo (ou o vértice inicial)! (Veja o help: ./dijkstra.bin -h)";
                 break;
             }
             else if (!strcmp(argv[i], "-o"))
@@ -218,7 +218,7 @@ int main(int argc, char *argv[])
         if (fFlag)
             read(inputFileName, outputFileName, v0);
         else if (!hFlag)
-            throw "Nenhum arquivo de entrada foi especificado! (Veja o help: ./dijkstra -h)";
+            throw "Nenhum arquivo de entrada foi especificado! (Veja o help: ./dijkstra.bin -h)";
     }
     catch (const char *msg)
     {
