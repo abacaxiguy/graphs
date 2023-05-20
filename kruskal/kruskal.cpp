@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
                 ordemCrescente = true;
             else if ((!strcmp(argv[i], "-o") || !strcmp(argv[i], "-f")) && argv[i + 1] == NULL)
             {
-                throw "Especifique o caminho do arquivo (ou o vértice inicial)! (Veja o help: ./kruskal.bin -h)";
+                throw "Especifique o caminho do arquivo! (Veja o help: ./kruskal.bin -h)";
                 break;
             }
             else if (!strcmp(argv[i], "-o"))
