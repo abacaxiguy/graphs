@@ -6,7 +6,9 @@
 #include <sstream>
 #include <list>
 #include <queue>
+
 #define inf 9999999
+
 using namespace std;
 
 class Grafo
