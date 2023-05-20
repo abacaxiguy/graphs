@@ -51,8 +51,7 @@ public:
 
             visitado[u] = true;
 
-            list<pair<int, int>>::iterator it;
-            for (it = adj[u].begin(); it != adj[u].end(); it++)
+            for (auto it = adj[u].begin(); it != adj[u].end(); it++)
             {
                 int v = it->first;
                 int custo_aresta = it->second;

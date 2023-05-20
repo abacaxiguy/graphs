@@ -59,10 +59,8 @@ public:
                 // marca como visitado
                 visitados[u] = true;
 
-                list<pair<int, int>>::iterator it; // percorre a lista dos vizinhos atraves do iterator
-
                 // percorre os vertices v vizinhos de u
-                for (it = adj[u].begin(); it != adj[u].end(); it++)
+                for (auto it = adj[u].begin(); it != adj[u].end(); it++)
                 {
                     // obtem o vertice visinho e o custo da aresta
                     int v = it->first;
