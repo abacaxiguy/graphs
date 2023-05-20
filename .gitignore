@@ -32,8 +32,6 @@
 
 # VSCode
 
-.vscode
-
 # Binaries
 *
 !/**/
@@ -42,3 +40,5 @@
 # Compiled Object files
 *.o
 *.bin
+
+.vscode
