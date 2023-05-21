@@ -7,7 +7,6 @@
 #include <list>
 #include <queue>
 #include <algorithm> // sort
-#include <string.h>  // memset
 
 using namespace std;
 
