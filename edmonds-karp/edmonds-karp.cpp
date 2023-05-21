@@ -72,7 +72,7 @@ public:
         return visited[sink];
     }
 
-    void edmonds_karp(int source, int sink, string outputFileName, bool path)
+    void edmonds_karp(int source, int sink, string outputFileName, bool path, bool totalPath)
     {
         if (sink == 0)
             sink = v - 1;
@@ -142,13 +142,16 @@ public:
                     }
                 }
 
-                for (int u = 1; u < v; u++)
+                if (totalPath)
                 {
-                    for (const auto &arco : fluxoMaximoGrafo[u])
+                    for (int u = 1; u < v; u++)
                     {
-                        if (arco.fluxo == 0)
+                        for (const auto &arco : fluxoMaximoGrafo[u])
                         {
-                            outputFile << "(" << u << "," << arco.v << ") - " << arco.fluxo << "/" << arco.capacidade << endl;
+                            if (arco.fluxo == 0)
+                            {
+                                outputFile << "(" << u << "," << arco.v << ") - " << arco.fluxo << "/" << arco.capacidade << endl;
+                            }
                         }
                     }
                 }
@@ -170,14 +173,16 @@ public:
                         }
                     }
                 }
-
-                for (int u = 1; u < v; u++)
+                if (totalPath)
                 {
-                    for (const auto &arco : fluxoMaximoGrafo[u])
+                    for (int u = 1; u < v; u++)
                     {
-                        if (arco.fluxo == 0)
+                        for (const auto &arco : fluxoMaximoGrafo[u])
                         {
-                            cout << "(" << u << "," << arco.v << ") - " << arco.fluxo << "/" << arco.capacidade << endl;
+                            if (arco.fluxo == 0)
+                            {
+                                cout << "(" << u << "," << arco.v << ") - " << arco.fluxo << "/" << arco.capacidade << endl;
+                            }
                         }
                     }
                 }
@@ -200,7 +205,7 @@ public:
     }
 };
 
-void read(string fileName, string outputFileName, int v0, int vi, bool path)
+void read(string fileName, string outputFileName, int v0, int vi, bool path, bool totalPath)
 {
     ifstream file;
     try
@@ -246,7 +251,7 @@ void read(string fileName, string outputFileName, int v0, int vi, bool path)
 
     file.close();
 
-    g.edmonds_karp(v0, vi, outputFileName, path);
+    g.edmonds_karp(v0, vi, outputFileName, path, totalPath);
 
     return;
 }
@@ -259,7 +264,8 @@ void help()
             "-f <arquivo> : indica o \"arquivo\" que contém o grafo de entrada\n"
             "-i v0        : vértice inicial/source \"v0\" (se não for enviado, v0 será 1) \n"
             "-d vi        : vértice final/sink \"vi\" (se não for enviado, vi será o último vértice) \n"
-            "-c           : mostra o fluxo máximo/corte mínimo. Ex: (v0, vn) - f/c\n\n"
+            "-c           : mostra o fluxo máximo/corte mínimo de arestas com fluxo maior que 0\n"
+            "-ct          : mostra o fluxo máximo/corte mínimo de todas as arestas (recomendado para grafos com poucas arestas)\n\n"
             "Para saber o fluxo máximo do vértice v0 para vi, use: \n./edmonds-karp.bin -f <arquivo> -i v0 -d vi\n\n"
             "Para saber o caminho percorrido, use: \n./edmonds-karp.bin -f <arquivo> -i v0 -d vi -c\n\n"
             "Para salvar o resultado em um arquivo, use: \n./edmonds-karp.bin -f <arquivo> -o <arquivo> -i v0 -d vi\n\n";
@@ -269,7 +275,7 @@ int main(int argc, char *argv[])
 {
     try
     {
-        bool fFlag = false, hFlag = false, path = false;
+        bool fFlag = false, hFlag = false, path = false, totalPath = false;
         string outputFileName = "", inputFileName = "";
         int v0 = 1, vi = 0;
 
@@ -314,6 +320,11 @@ int main(int argc, char *argv[])
             {
                 path = true;
             }
+            else if (!strcmp(argv[i], "-ct"))
+            {
+                path = true;
+                totalPath = true;
+            }
             else
             {
                 throw "Argumento inválido!";
@@ -321,7 +332,7 @@ int main(int argc, char *argv[])
             }
         }
         if (fFlag)
-            read(inputFileName, outputFileName, v0, vi, path);
+            read(inputFileName, outputFileName, v0, vi, path, totalPath);
         else if (!hFlag)
             throw "Nenhum arquivo de entrada foi especificado! (Veja o help: ./edmonds-karp.bin -h)";
     }
