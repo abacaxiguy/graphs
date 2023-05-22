@@ -129,6 +129,13 @@ public:
                 ofstream outputFile;
                 outputFile.open(outputFileName);
 
+                if (fluxoMaximo == 0)
+                {
+                    outputFile << "fluxo de " << source << " para " << sink << " não existe!" << endl;
+                    outputFile.close();
+                    return;
+                }
+
                 outputFile << source << " -> " << sink << endl;
 
                 for (int u = 1; u < v; u++)
@@ -160,6 +167,11 @@ public:
             }
             else
             {
+                if (fluxoMaximo == 0)
+                {
+                    cout << "\e[31mfluxo de " << source << " para " << sink << " não existe!\e[0m" << endl;
+                    return;
+                }
 
                 cout << source << " -> " << sink << endl;
 
