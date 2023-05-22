@@ -363,6 +363,9 @@ int main(int argc, char *argv[])
                 break;
             }
         }
+        if (v0 == vi)
+            throw "O vértice inicial e final são iguais! (Veja o help: ./edmonds-karp.bin -h)";
+
         if (fFlag)
             read(inputFileName, outputFileName, v0, vi, path, totalPath, aFlag);
         else if (!hFlag)
