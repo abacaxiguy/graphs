@@ -72,7 +72,7 @@ public:
         return visited[sink];
     }
 
-    void edmonds_karp(int source, int sink, string outputFileName, bool path, bool totalPath)
+    void edmonds_karp(int source, int sink, string outputFileName, bool path, bool totalPath, bool aFlag)
     {
         if (sink == 0)
             sink = v - 1;
@@ -202,22 +202,25 @@ public:
         }
         else
         {
+            if (aFlag && fluxoMaximo == 0)
+                return;
+
             if (outputFileName != "")
             {
                 ofstream outputFile;
                 outputFile.open(outputFileName);
 
-                outputFile << fluxoMaximo << endl;
+                outputFile << source << " -> " << sink << ": " << fluxoMaximo << endl;
 
                 outputFile.close();
             }
             else
-                cout << fluxoMaximo << endl;
+                cout << source << " -> " << sink << ": " << fluxoMaximo << endl;
         }
     }
 };
 
-void read(string fileName, string outputFileName, int v0, int vi, bool path, bool totalPath)
+void read(string fileName, string outputFileName, int v0, int vi, bool path, bool totalPath, bool aFlag)
 {
     ifstream file;
     try
@@ -263,7 +266,19 @@ void read(string fileName, string outputFileName, int v0, int vi, bool path, boo
 
     file.close();
 
-    g.edmonds_karp(v0, vi, outputFileName, path, totalPath);
+    if (!aFlag)
+        g.edmonds_karp(v0, vi, outputFileName, path, totalPath, aFlag);
+    else
+    {
+        for (int i = 1; i <= vertices; i++)
+        {
+            for (int j = 1; j <= vertices; j++)
+            {
+                if (i != j)
+                    g.edmonds_karp(i, j, outputFileName, false, false, aFlag);
+            }
+        }
+    }
 
     return;
 }
@@ -276,10 +291,11 @@ void help()
             "-f <arquivo> : indica o \"arquivo\" que contém o grafo de entrada\n"
             "-i v0        : vértice inicial/source \"v0\" (se não for enviado, v0 será 1) \n"
             "-d vi        : vértice final/sink \"vi\" (se não for enviado, vi será o último vértice) \n"
-            "-c           : mostra o fluxo máximo/corte mínimo de arestas com fluxo maior que 0\n"
-            "-ct          : mostra o fluxo máximo/corte mínimo de todas as arestas (recomendado para grafos com poucas arestas)\n\n"
+            "-a           : calcula o fluxo máximo de todos os vértices com fluxo > 0 (v0 e vi serão ignorados)\n"
+            "-c           : mostra a rede resultante com as arestas que possuem fluxo > 0\n"
+            "-ct          : mostra a rede resultante com todas as arestas (recomendado para grafos com poucas arestas)\n\n"
             "Para saber o fluxo máximo do vértice v0 para vi, use: \n./edmonds-karp.bin -f <arquivo> -i v0 -d vi\n\n"
-            "Para saber o caminho percorrido, use: \n./edmonds-karp.bin -f <arquivo> -i v0 -d vi -c\n\n"
+            "Para saber a rede resultante do vértice v0 para vi, use: \n./edmonds-karp.bin -f <arquivo> -i v0 -d vi -c\n\n"
             "Para salvar o resultado em um arquivo, use: \n./edmonds-karp.bin -f <arquivo> -o <arquivo> -i v0 -d vi\n\n";
 }
 
@@ -287,7 +303,7 @@ int main(int argc, char *argv[])
 {
     try
     {
-        bool fFlag = false, hFlag = false, path = false, totalPath = false;
+        bool fFlag = false, hFlag = false, aFlag = false, path = false, totalPath = false;
         string outputFileName = "", inputFileName = "";
         int v0 = 1, vi = 0;
 
@@ -337,6 +353,10 @@ int main(int argc, char *argv[])
                 path = true;
                 totalPath = true;
             }
+            else if (!strcmp(argv[i], "-a"))
+            {
+                aFlag = true;
+            }
             else
             {
                 throw "Argumento inválido!";
@@ -344,7 +364,7 @@ int main(int argc, char *argv[])
             }
         }
         if (fFlag)
-            read(inputFileName, outputFileName, v0, vi, path, totalPath);
+            read(inputFileName, outputFileName, v0, vi, path, totalPath, aFlag);
         else if (!hFlag)
             throw "Nenhum arquivo de entrada foi especificado! (Veja o help: ./edmonds-karp.bin -h)";
     }
