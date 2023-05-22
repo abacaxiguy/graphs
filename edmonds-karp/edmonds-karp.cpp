@@ -308,12 +308,12 @@ int main(int argc, char *argv[])
             }
             else if (!strcmp(argv[i], "-i"))
             {
-                v0 = atoi(argv[i + 1]);
+                v0 = stoi(argv[i + 1]);
                 i++;
             }
             else if (!strcmp(argv[i], "-d"))
             {
-                vi = atoi(argv[i + 1]);
+                vi = stoi(argv[i + 1]);
                 i++;
             }
             else if (!strcmp(argv[i], "-c"))
