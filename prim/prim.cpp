@@ -29,6 +29,11 @@ public:
         adj = new list<pair<int, int>>[v];
     }
 
+    ~Grafo()
+    {
+        delete[] adj;
+    }
+
     // adiciona uma aresta ao grafo de v1 a v2
     void adicionar(int v1, int v2, int custo)
     {
