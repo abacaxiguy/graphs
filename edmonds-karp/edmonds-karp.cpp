@@ -210,7 +210,7 @@ public:
                 ofstream outputFile;
                 outputFile.open(outputFileName);
 
-                outputFile << source << " -> " << sink << ": " << fluxoMaximo << endl;
+                outputFile << source << " -> " << sink << ": " << fluxoMaximo;
 
                 outputFile.close();
             }
@@ -291,7 +291,7 @@ void help()
             "-f <arquivo> : indica o \"arquivo\" que contém o grafo de entrada\n"
             "-i v0        : vértice inicial/source \"v0\" (se não for enviado, v0 será 1) \n"
             "-d vi        : vértice final/sink \"vi\" (se não for enviado, vi será o último vértice) \n"
-            "-a           : calcula o fluxo máximo de todos os vértices com fluxo > 0 (v0 e vi serão ignorados)\n"
+            "-a           : calcula o fluxo máximo de todos os vértices possíveis, \"v0\" e \"vi\" serão ignorados (AVISO: pode demorar para grafos grandes)\n"
             "-c           : mostra a rede resultante com as arestas que possuem fluxo > 0\n"
             "-ct          : mostra a rede resultante com todas as arestas (recomendado para grafos com poucas arestas)\n\n"
             "Para saber o fluxo máximo do vértice v0 para vi, use: \n./edmonds-karp.bin -f <arquivo> -i v0 -d vi\n\n"
