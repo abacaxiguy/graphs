@@ -2,8 +2,6 @@
 
 edmondskarp=./edmonds-karp.bin
 
-ITER=0
-
 echo "Testando algoritmo de Edmonds-Karp"
 for i in instances/*.mtx
 do
@@ -24,5 +22,4 @@ do
 		echo -e "\e[31mRede resultante incorreta\e[0m";
 	fi
 	rm temp;
-    ITER=$(expr $ITER + 1)
 done
