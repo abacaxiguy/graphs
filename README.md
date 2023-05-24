@@ -1,6 +1,6 @@
 # Teoria dos Grafos
 
-# 📋 Algoritmos implementados
+## 📋 Algoritmos implementados
 
 - [Algoritmo de Dijkstra](./dijkstra/)
 - [Algoritmo de Prim](./prim/)
