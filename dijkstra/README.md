@@ -29,9 +29,11 @@ $ ./dijkstra.bin -h
     -f <arquivo> : indica o "arquivo" que contém o grafo de entrada
     -i v0        : vértice inicial "v0" (se não for enviado, v0 será 1)
 
-    Para saber a distância mínima do vértice v0 para todos os demais, use: ./dijkstra.bin -f <arquivo> -i v0
+    Para saber a distância mínima do vértice v0 para todos os demais, use:
+    ./dijkstra.bin -f <arquivo> -i v0
 
-    Para salvar a distância mínima em um arquivo, use: ./dijkstra.bin -f <arquivo> -o <arquivo> -i v0;
+    Para salvar a distância mínima em um arquivo, use:
+    ./dijkstra.bin -f <arquivo> -o <arquivo> -i v0;
 ```
 
 ## 🛠 Como usar

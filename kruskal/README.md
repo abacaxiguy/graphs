@@ -29,11 +29,14 @@ $ ./kruskal.bin -h
     -f <arquivo> : indica o "arquivo" que contém o grafo de entrada
     -s           : mostra a solução (em ordem crescente)
 
-    Para calcular o custo da AGM, use:./kruskal.bin -f <arquivo>
+    Para calcular o custo da AGM, use:
+    ./kruskal.bin -f <arquivo>
 
-    Para imprimir a árvore geradora mínima, use: ./kruskal.bin -f <arquivo> -s
+    Para imprimir a árvore geradora mínima, use:
+    ./kruskal.bin -f <arquivo> -s
 
-    Para salvar o resultado em um arquivo, use: ./kruskal.bin -f <arquivo> -o <arquivo>
+    Para salvar o resultado em um arquivo, use:
+    ./kruskal.bin -f <arquivo> -o <arquivo>
 ```
 
 ## 🛠 Como usar
