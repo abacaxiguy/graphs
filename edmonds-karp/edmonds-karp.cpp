@@ -250,6 +250,18 @@ void read(string fileName, string outputFileName, int v0, int vi, bool path, boo
 
     iss >> vertices >> arestas;
 
+    if (v0 < 1 || v0 > vertices)
+    {
+        cout << "\e[31mErro: Vértice inicial inválido!\e[0m" << endl;
+        return;
+    }
+
+    else if (vi < 1 || vi > vertices)
+    {
+        cout << "\e[31mErro: Vértice final inválido!\e[0m" << endl;
+        return;
+    }
+
     Grafo g(vertices + 1); // +1 pois o grafo começa do vertice 1
 
     for (int i = 0; i < arestas; i++)
